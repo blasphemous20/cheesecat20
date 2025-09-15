@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Buat Cayangku ❤️</title>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap');
+        :root {
+            --pastel-pink: #fde4ea; --dark-pink: #e91e63; --text-color: #555;
+            --container-bg: #ffffff; --shadow-color: rgba(0, 0, 0, 0.1);
+            --envelope-color: #f7d9e0; --envelope-flap: #f4c2c2;
+        }
+        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background-color: var(--pastel-pink); color: var(--text-color); overflow: hidden; }
+        #opener-section { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(135deg, #fde4ea 0%, #fad0c4 100%); display: flex; justify-content: center; align-items: center; z-index: 1000; transition: opacity 1s ease-in-out, visibility 1s ease-in-out; opacity: 1; visibility: visible; }
+        #opener-section.closed { opacity: 0; visibility: hidden; }
+        .envelope-wrapper { cursor: pointer; text-align: center; }
+        .envelope { position: relative; width: 300px; height: 200px; background-color: var(--envelope-color); border-radius: 10px; box-shadow: 0 10px 30px var(--shadow-color); transition: transform 1s ease-in-out; }
+        .flap { position: absolute; top: 0; left: 0; width: 100%; height: 100px; background-color: var(--envelope-flap); transform-origin: top; clip-path: polygon(0 0, 100% 0, 50% 100%); transition: transform 0.5s ease-in-out; z-index: 3; }
+        .letter { position: absolute; bottom: 0; left: 5%; width: 90%; height: 90%; background-color: white; border-radius: 5px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 1; transition: transform 0.5s ease-in-out 0.3s; overflow: hidden; text-align: center; padding-top: 20px; }
+        .letter-content { font-family: 'Pacifico', cursive; font-size: 1.5rem; color: var(--dark-pink); }
+        .envelope-wrapper.open .flap { transform: rotateX(180deg); }
+        .envelope-wrapper.open .letter { transform: translateY(-120px); }
+        .open-text { margin-top: 20px; font-family: 'Poppins', sans-serif; font-size: 1.2rem; color: var(--dark-pink); animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+        #main-content { opacity: 0; visibility: hidden; transition: opacity 1s ease-in-out 0.5s; padding: 20px; overflow-x: hidden; }
+        #main-content.visible { opacity: 1; visibility: visible; }
+        .container { max-width: 800px; margin: 40px auto; background-color: var(--container-bg); padding: 30px 40px; border-radius: 20px; box-shadow: 0 10px 30px var(--shadow-color); position: relative; z-index: 1; text-align: center; }
+        header h1 { font-family: 'Pacifico', cursive; color: var(--dark-pink); font-size: 3.5em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(233, 30, 99, 0.1); }
+        .message-section h2 { font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--dark-pink); font-size: 1.8em; margin-bottom: 15px; }
+        .message-section p { font-size: 1.1em; line-height: 1.8; text-align: justify; min-height: 150px; }
+        footer { margin-top: 40px; font-family: 'Pacifico', cursive; font-size: 1.5em; color: var(--dark-pink); }
+        .cat-decoration { position: absolute; width: 100px; height: auto; z-index: -1; opacity: 0.8; bottom: -20px; left: -30px; transform: rotate(-15deg); }
+        .falling-element { position: fixed; top: -10%; font-size: 2rem; animation: fall linear infinite; z-index: 0; user-select: none; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+        .action-button { background-color: var(--dark-pink); color: white; border: none; padding: 12px 25px; border-radius: 25px; font-family: 'Poppins', sans-serif; font-size: 1em; font-weight: 600; cursor: pointer; margin-top: 20px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .action-button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4); }
+        .modal-overlay { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+        .modal-content { background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 400px; border-radius: 15px; position: relative; animation: fadeIn 0.5s; text-align: center; }
+        .modal-content img { max-width: 100%; border-radius: 10px; }
+        .modal-caption { margin-top: 15px; font-size: 1.1em; color: var(--dark-pink); font-family: 'Pacifico', cursive; }
+        .close-button { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
+        @keyframes fadeIn { from {opacity: 0; transform: scale(0.9);} to {opacity: 1; transform: scale(1);} }
+        #music-control { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: var(--dark-pink); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; }
+        #music-control.visible { opacity: 1; visibility: visible; }
+        #music-icon { width: 24px; height: 24px; }
+        
+        /* [BARU] CSS UNTUK SLIDESHOW FOTO */
+        .slideshow-container { max-width: 500px; position: relative; margin: auto; border: 5px solid var(--dark-pink); padding: 5px; border-radius: 15px; box-shadow: 0 0 15px rgba(233, 30, 99, 0.3); }
+        .slide-image { width: 100%; border-radius: 10px; }
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -22px; color: white; font-weight: bold; font-size: 24px; transition: 0.6s ease; border-radius: 0 3px 3px 0; user-select: none; background-color: rgba(233, 30, 99, 0.5); }
+        .next { right: 5px; border-radius: 3px 0 0 3px; }
+        .prev { left: 5px; }
+        .prev:hover, .next:hover { background-color: rgba(233, 30, 99, 1); }
+        .dot-container { text-align: center; padding: 10px 0; }
+        .dot { cursor: pointer; height: 15px; width: 15px; margin: 0 2px; background-color: #f7d9e0; border-radius: 50%; display: inline-block; transition: background-color 0.6s ease; }
+        .active, .dot:hover { background-color: var(--dark-pink); }
+        .fade { animation-name: fade; animation-duration: 1.5s; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+        @media (max-width: 600px) {
+            .envelope { width: 280px; height: 180px; }
+            .container { margin: 20px auto; padding: 20px; }
+            header h1 { font-size: 2.5em; }
+            .message-section h2 { font-size: 1.5em; }
+            .message-section p { font-size: 1em; }
+            .cat-peeking { width: 70px; bottom: -10px; left: -15px; }
+        }
+    </style>
+</head>
+<body>
+    <audio id="background-music" loop><source src="musik.mp3" type="audio/mpeg"></audio>
+
+    <section id="opener-section">
+        <div class="envelope-wrapper" id="envelope">
+            <div class="envelope">
+                <div class="letter"><div class="letter-content">Cayangku ❤️</div></div>
+                <div class="flap"></div>
+            </div>
+            <div class="open-text">Klik buat buka curatna!</div>
+        </div>
+    </section>
+
+    <div id="main-content">
+        <img src="peeking.svg" alt="Kucing Mengintip" class="cat-decoration cat-peeking">
+        <div class="container">
+            <header>
+                <h1>Selamat Ulang Tahun, Cayangku!</h1>
+            </header>
+            <main>
+                <section class="photo-section">
+                    <div class="slideshow-container">
+                        <div class="mySlides fade"><img src="foto1.jpg" class="slide-image"></div>
+                        <div class="mySlides fade"><img src="foto2.jpg" class="slide-image"></div>
+                        <div class="mySlides fade"><img src="foto3.jpg" class="slide-image"></div>
+                        
+                        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    </div>
+                    <div class="dot-container">
+                        <span class="dot" onclick="currentSlide(1)"></span>
+                        <span class="dot" onclick="currentSlide(2)"></span>
+                        <span class="dot" onclick="currentSlide(3)"></span>
+                    </div>
+                </section>
+
+                <section class="message-section">
+                    <h2>Pesan Kecil Untuk Cayangku ❤️</h2>
+                    <p><span id="typed-message"></span></p>
+                </section>
+                <section class="button-section">
+                    <button id="showMyPhotoButton" class="action-button">Ada Bonus Nih!</button>
+                </section>
+            </main>
+            <footer>
+                <p>Dengan Penuh Cinta, <br>Jay dan Para Maok bau</p>
+            </footer>
+        </div>
+        
+        <script>function startFallingElements() { const body = document.body; const e = ["🐾", "💖", "✨", "🐱"]; function t() { const t = document.createElement("div"); t.classList.add("falling-element"), t.innerText = e[Math.floor(Math.random() * e.length)], t.style.left = 100 * Math.random() + "vw", t.style.animationDuration = 3 * Math.random() + 5 + "s", t.style.animationDelay = 5 * Math.random() + "s", t.style.fontSize = 1.5 * Math.random() + 1 + "rem", t.style.opacity = Math.random(), body.appendChild(t), setTimeout(() => { t.remove() }, 8e3) } setInterval(t, 500) }</script>
+    </div>
+
+    <div id="myPhotoModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <img src="foto aku.jpg" alt="Foto dariku untukmu">
+            <p class="modal-caption">I Love You Cayangku!</p>
+        </div>
+    </div>
+    
+    <div id="music-control"><img id="music-icon" src="music.svg" alt="Music On"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const envelope = document.getElementById('envelope');
+        const openerSection = document.getElementById('opener-section');
+        const mainContent = document.getElementById('main-content');
+        const music = document.getElementById('background-music');
+        const musicControl = document.getElementById('music-control');
+        const musicIcon = document.getElementById('music-icon');
+        const iconPlay = "music.svg";
+        const iconMute = "music off.svg";
+
+        envelope.addEventListener('click', () => {
+            envelope.classList.add('open');
+            
+            // === [BAGIAN YANG DIPERBARUI] KODE UNTUK MEMUTAR MUSIK ===
+            // Kita coba putar musiknya dan tangani jika browser menolak
+            var promise = music.play();
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    // Berhasil diputar! Tidak perlu melakukan apa-apa.
+                    console.log("Audio berhasil dimulai.");
+                }).catch(error => {
+                    // Gagal diputar otomatis oleh browser.
+                    console.error("Autoplay diblokir oleh browser:", error);
+                    // Tombol manual masih bisa digunakan oleh pengguna.
+                });
+            }
+            // =======================================================
+            
+            confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+
+            setTimeout(() => {
+                openerSection.classList.add('closed');
+                setTimeout(() => {
+                    document.body.style.overflow = 'auto';
+                    mainContent.classList.add('visible');
+                    musicControl.classList.add('visible');
+                    startFallingElements();
+
+                    new Typed('#typed-message', {
+                        strings: [
+                            "Hai cayangkuuu, celamat ulang tahun yang ke 20th ya!, cemoga di usia cayang yang baru ini, cayang celalu diberikan kecehatan, bahagiana tumpah-tumpah, dan cemua impian kita bica terwujud catu-catu. Maaci ya cayang udah celalu ada, celalu jadi orang yang paling ngertiin, yang celalu jadi pelangi cetelah hujan. Bener-bener bersyukur banget punya cayang. Pokoknya, dulu, cekarang I will Always love you, cayang!"
+                        ],
+                        typeSpeed: 50,
+                        backSpeed: 20,
+                        loop: false
+                    });
+                }, 1000);
+            }, 1000);
+        });
+
+        musicControl.addEventListener('click', () => {
+            if (music.paused) { music.play(); musicIcon.src = iconPlay; } 
+            else { music.pause(); musicIcon.src = iconMute; }
+        });
+
+        const modal = document.getElementById('myPhotoModal');
+        const btn = document.getElementById('showMyPhotoButton');
+        const span = document.getElementsByClassName('close-button')[0];
+        btn.onclick = function() { modal.style.display = "flex"; }
+        span.onclick = function() { modal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
+    });
+
+    let slideIndex = 1;
+    showSlides(slideIndex);
+    function plusSlides(n) { showSlides(slideIndex += n); }
+    function currentSlide(n) { showSlides(slideIndex = n); }
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
+        for (i = 0; i < dots.length; i++) { dots[i].className = dots[i].className.replace(" active", ""); }
+        slides[slideIndex-1].style.display = "block";
+        dots[slideIndex-1].className += " active";
+    }
+    </script>
+</body>
+</html>
